@@ -1,35 +1,69 @@
 use strict;
 use warnings;
 package Dist::Zilla::Plugin::CheckSelfDependency;
-# ABSTRACT: ...
+# ABSTRACT: Check if your distribution declares a dependency on itself
 # vim: set ts=8 sw=4 tw=78 et :
 
+use Moose;
+with 'Dist::Zilla::Role::AfterBuild';
+use List::MoreUtils qw(any uniq);
+use Module::Runtime 'module_notional_filename';
 
+sub after_build
+{
+    my $self = shift;
 
-1;
+    my $prereqs = $self->zilla->prereqs->as_string_hash;
+
+    # for now, we check all phases and types.
+    my @prereqs = uniq map { keys %$_ } map { values %$_ } values %$prereqs;
+
+    my $files = $self->zilla->find_files(':InstallModules');
+
+    my @errors;
+    foreach my $prereq (@prereqs)
+    {
+        push @errors, $prereq . ' is listed as a prereq, but is also provided by this dist!'
+            if any { File::Spec->catfile('lib', module_notional_filename($prereq)) eq $_ }
+                map { $_->name } @$files;
+    }
+
+    $self->log_fatal(@errors) if @errors;
+}
+
+__PACKAGE__->meta->make_immutable;
 __END__
 
 =pod
 
 =head1 SYNOPSIS
 
-    use Dist::Zilla::Plugin::CheckSelfDependency;
+In your F<dist.ini>:
 
-    ...
+    [CheckSelfDependency]
 
 =head1 DESCRIPTION
 
-...
+This is a L<Dist::Zilla> plugin that runs in the I<after build> phase, which
+checks all of your module prerequisites (all phases, all types) to confirm
+that none of them refer to modules that are provided by this distribution.
 
-=head1 FUNCTIONS/METHODS
+While some prereq providers (e.g. L<C<[AutoPrereqs]>|Dist::Zilla::Plugin::AutoPrereqs>)
+do not inject dependencies found internally, there are many plugins that
+generate code and also inject the prerequisites needed by that code, without
+regard to whether some of those modules might be provided by your dist.
 
-=over 4
+If such modules are found, the build fails.  To remedy the situation, remove
+the plugin that adds the prerequisite, or remove it with
+L<C<[RemovePrereqs]>|Dist::Zilla::Plugin::RemovePrereqs>. (Remember that
+plugin order is significant - you need to remove the prereq after it has been
+added.)
 
-=item * C<foo>
+=head1 LIMITATIONS
 
-...
-
-=back
+For now, the module check is quite simplistic, assuming a clean
+F<Foo/Bar.pm> -> C<Foo::Bar> mapping. It does not scan each module within the
+dist to check what namespaces are actually provided. (TODO/patches welcome!)
 
 =head1 SUPPORT
 
@@ -38,17 +72,5 @@ __END__
 Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=Dist-Zilla-Plugin-CheckSelfDependency>
 (or L<bug-Dist-Zilla-Plugin-CheckSelfDependency@rt.cpan.org|mailto:bug-Dist-Zilla-Plugin-CheckSelfDependency@rt.cpan.org>).
 I am also usually active on irc, as 'ether' at C<irc.perl.org>.
-
-=head1 ACKNOWLEDGEMENTS
-
-...
-
-=head1 SEE ALSO
-
-=begin :list
-
-* L<foo>
-
-=end :list
 
 =cut
