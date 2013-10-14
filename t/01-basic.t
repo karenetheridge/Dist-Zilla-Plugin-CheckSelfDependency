@@ -23,7 +23,7 @@ my $tzil = Builder->from_config(
 
 like(
     exception { $tzil->build },
-    qr/Foo::Bar is listed as a prereq, but is also provided by this dist!/,
+    qr{Foo::Bar is listed as a prereq, but is also provided by this dist \(lib/Foo/Bar.pm\)!},
     'build is aborted',
 );
 

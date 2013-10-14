@@ -7,7 +7,7 @@ package Dist::Zilla::Plugin::CheckSelfDependency;
 use Moose;
 with 'Dist::Zilla::Role::AfterBuild';
 use List::MoreUtils qw(any uniq);
-use Module::Runtime 'module_notional_filename';
+use Module::Metadata;
 
 sub after_build
 {
@@ -21,11 +21,15 @@ sub after_build
     my $files = $self->zilla->find_files(':InstallModules');
 
     my @errors;
-    foreach my $prereq (@prereqs)
+    foreach my $file (@$files)
     {
-        push @errors, $prereq . ' is listed as a prereq, but is also provided by this dist!'
-            if any { File::Spec->catfile('lib', module_notional_filename($prereq)) eq $_ }
-                map { $_->name } @$files;
+        my @packages = Module::Metadata->new_from_file($file->name)->packages_inside;
+        foreach my $prereq (@prereqs)
+        {
+            push @errors, $prereq . ' is listed as a prereq, but is also provided by this dist ('
+                    . $file->name . ')!'
+                if any { $prereq eq $_ } @packages;
+        }
     }
 
     $self->log_fatal(@errors) if @errors;
@@ -58,12 +62,6 @@ the plugin that adds the prerequisite, or remove it with
 L<C<[RemovePrereqs]>|Dist::Zilla::Plugin::RemovePrereqs>. (Remember that
 plugin order is significant - you need to remove the prereq after it has been
 added.)
-
-=head1 LIMITATIONS
-
-For now, the module check is quite simplistic, assuming a clean
-F<Foo/Bar.pm> -> C<Foo::Bar> mapping. It does not scan each module within the
-dist to check what namespaces are actually provided. (TODO/patches welcome!)
 
 =head1 SUPPORT
 
