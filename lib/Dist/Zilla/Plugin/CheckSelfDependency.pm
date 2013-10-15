@@ -8,6 +8,7 @@ use Moose;
 with 'Dist::Zilla::Role::AfterBuild';
 use List::MoreUtils qw(any uniq);
 use Module::Metadata;
+use namespace::autoclean;
 
 sub after_build
 {
@@ -39,6 +40,8 @@ __PACKAGE__->meta->make_immutable;
 __END__
 
 =pod
+
+=for Pod::Coverage after_build
 
 =head1 SYNOPSIS
 
