@@ -58,9 +58,9 @@ generate code and also inject the prerequisites needed by that code, without
 regard to whether some of those modules might be provided by your dist.
 
 If such modules are found, the build fails.  To remedy the situation, remove
-the plugin that adds the prerequisite, or remove it with
+the plugin that adds the prerequisite, or remove the prerequisite itself with
 L<C<[RemovePrereqs]>|Dist::Zilla::Plugin::RemovePrereqs>. (Remember that
-plugin order is significant - you need to remove the prereq after it has been
+plugin order is significant -- you need to remove the prereq after it has been
 added.)
 
 =head1 SUPPORT
