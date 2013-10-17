@@ -17,7 +17,11 @@ sub after_build
     my $prereqs = $self->zilla->prereqs->as_string_hash;
 
     # for now, we check all phases and types.
-    my @prereqs = uniq map { keys %$_ } map { values %$_ } values %$prereqs;
+    my @prereqs = uniq
+        map { keys %$_ }
+        map { values %$_ }
+        grep { defined }
+        @{$prereqs}{qw(configure build runtime test)};
 
     my $files = $self->zilla->find_files(':InstallModules');
 
@@ -52,7 +56,7 @@ In your F<dist.ini>:
 =head1 DESCRIPTION
 
 This is a L<Dist::Zilla> plugin that runs in the I<after build> phase, which
-checks all of your module prerequisites (all phases, all types) to confirm
+checks all of your module prerequisites (all phases, all types except develop) to confirm
 that none of them refer to modules that are provided by this distribution.
 
 While some prereq providers (e.g. L<C<[AutoPrereqs]>|Dist::Zilla::Plugin::AutoPrereqs>)

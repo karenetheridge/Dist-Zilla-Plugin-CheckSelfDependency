@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - skip checking develop prereqs, (it is not horrible for a plugin or
+            bundle to list itself as a develop prereq)
 
 0.001     2013-10-14 02:15:52Z (Karen Etheridge)
           - Initial release.
