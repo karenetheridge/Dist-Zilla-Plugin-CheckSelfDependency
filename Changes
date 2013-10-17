@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.002     2013-10-17 02:58:11Z (Karen Etheridge)
           - skip checking develop prereqs, (it is not horrible for a plugin or
             bundle to list itself as a develop prereq)
 

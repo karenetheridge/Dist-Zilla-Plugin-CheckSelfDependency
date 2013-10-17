@@ -4,7 +4,7 @@ Dist::Zilla::Plugin::CheckSelfDependency - Check if your distribution declares a
 
 # VERSION
 
-version 0.001
+version 0.002
 
 # SYNOPSIS
 
@@ -15,7 +15,7 @@ In your `dist.ini`:
 # DESCRIPTION
 
 This is a [Dist::Zilla](http://search.cpan.org/perldoc?Dist::Zilla) plugin that runs in the _after build_ phase, which
-checks all of your module prerequisites (all phases, all types) to confirm
+checks all of your module prerequisites (all phases, all types except develop) to confirm
 that none of them refer to modules that are provided by this distribution.
 
 While some prereq providers (e.g. [`[AutoPrereqs]`](http://search.cpan.org/perldoc?Dist::Zilla::Plugin::AutoPrereqs))
@@ -24,9 +24,9 @@ generate code and also inject the prerequisites needed by that code, without
 regard to whether some of those modules might be provided by your dist.
 
 If such modules are found, the build fails.  To remedy the situation, remove
-the plugin that adds the prerequisite, or remove it with
+the plugin that adds the prerequisite, or remove the prerequisite itself with
 [`[RemovePrereqs]`](http://search.cpan.org/perldoc?Dist::Zilla::Plugin::RemovePrereqs). (Remember that
-plugin order is significant - you need to remove the prereq after it has been
+plugin order is significant -- you need to remove the prereq after it has been
 added.)
 
 # SUPPORT
