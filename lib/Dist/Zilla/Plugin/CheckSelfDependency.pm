@@ -6,7 +6,6 @@ package Dist::Zilla::Plugin::CheckSelfDependency;
 
 use Moose;
 with 'Dist::Zilla::Role::AfterBuild';
-use List::MoreUtils qw(any uniq);
 use Module::Metadata;
 use namespace::autoclean;
 
@@ -14,14 +13,11 @@ sub after_build
 {
     my $self = shift;
 
-    my $prereqs = $self->zilla->prereqs->as_string_hash;
-
-    # for now, we check all phases, and all types but develop
-    my @prereqs = uniq
+    my %prereqs = map { $_ => 1 }
         map { keys %$_ }
         map { values %$_ }
         grep { defined }
-        @{$prereqs}{qw(configure build runtime test)};
+        @{ $self->zilla->prereqs->as_string_hash }{qw(configure build runtime test)};
 
     my $files = $self->zilla->find_files(':InstallModules');
 
@@ -34,11 +30,11 @@ sub after_build
         open my $fh, '<', \$content or $self->log_fatal("cannot open scalar fh: $!");
 
         my @packages = Module::Metadata->new_from_handle($fh, $file->name)->packages_inside;
-        foreach my $prereq (@prereqs)
+        foreach my $package (@packages)
         {
-            push @errors, $prereq . ' is listed as a prereq, but is also provided by this dist ('
+            push @errors, $package . ' is listed as a prereq, but is also provided by this dist ('
                     . $file->name . ')!'
-                if any { $prereq eq $_ } @packages;
+                if exists $prereqs{$package};
         }
     }
 
