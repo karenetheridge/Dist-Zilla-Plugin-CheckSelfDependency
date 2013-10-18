@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.003     2013-10-18 01:13:36Z (Karen Etheridge)
           - properly handle .pm files that don't exist on disk yet (e.g.
             ::Conflicts)
 
