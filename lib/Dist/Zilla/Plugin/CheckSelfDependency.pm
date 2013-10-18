@@ -28,7 +28,12 @@ sub after_build
     my @errors;
     foreach my $file (@$files)
     {
-        my @packages = Module::Metadata->new_from_file($file->name)->packages_inside;
+        # TODO - encoding issues? for now, Dist::Zilla gives us the file
+        # content from disk as :raw, otherwise in "whatever"
+        my $content = $file->content;
+        open my $fh, '<', \$content or $self->log_fatal("cannot open scalar fh: $!");
+
+        my @packages = Module::Metadata->new_from_handle($fh, $file->name)->packages_inside;
         foreach my $prereq (@prereqs)
         {
             push @errors, $prereq . ' is listed as a prereq, but is also provided by this dist ('
