@@ -16,7 +16,7 @@ sub after_build
 
     my $prereqs = $self->zilla->prereqs->as_string_hash;
 
-    # for now, we check all phases and types.
+    # for now, we check all phases, and all types but develop
     my @prereqs = uniq
         map { keys %$_ }
         map { values %$_ }
