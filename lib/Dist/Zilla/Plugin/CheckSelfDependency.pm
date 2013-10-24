@@ -24,10 +24,17 @@ sub after_build
     my @errors;
     foreach my $file (@$files)
     {
-        # TODO - encoding issues? for now, Dist::Zilla gives us the file
-        # content from disk as :raw, otherwise in "whatever"
-        my $content = $file->content;
-        open my $fh, '<', \$content or $self->log_fatal("cannot open scalar fh: $!");
+        # Dist::Zilla pre-5.0 gives us the file content from disk as :raw,
+        # otherwise we get it in its decoded form (characters)
+        my $binmode = Dist::Zilla->VERSION < 5
+            ? ''
+            : $file->encoding eq 'bytes' ? ':raw' : sprintf ':encoding(%s)', $file->encoding;
+
+        my $content = Dist::Zilla->VERSION < 5
+            ? $file->content
+            : $file->encoded_content;
+
+        open my $fh, '<'.$binmode, \$content or $self->log_fatal("cannot open scalar fh: $!");
 
         my @packages = Module::Metadata->new_from_handle($fh, $file->name)->packages_inside;
         foreach my $package (@packages)

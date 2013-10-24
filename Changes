@@ -1,6 +1,9 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - fixes for Dist::Zilla 5.x, where we need to set the binmode on the
+            fh before opening to the encoded content (we are still compatible
+            with older Dist::Zilla as well)
 
 0.003     2013-10-18 01:13:36Z (Karen Etheridge)
           - properly handle .pm files that don't exist on disk yet (e.g.
