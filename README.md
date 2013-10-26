@@ -4,7 +4,7 @@ Dist::Zilla::Plugin::CheckSelfDependency - Check if your distribution declares a
 
 # VERSION
 
-version 0.004
+version 0.005
 
 # SYNOPSIS
 
