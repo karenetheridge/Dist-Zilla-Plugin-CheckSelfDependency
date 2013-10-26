@@ -6,7 +6,7 @@ package Dist::Zilla::Plugin::CheckSelfDependency;
 
 use Moose;
 with 'Dist::Zilla::Role::AfterBuild';
-use Module::Metadata;
+use Module::Metadata 1.000005;
 use namespace::autoclean;
 
 sub after_build

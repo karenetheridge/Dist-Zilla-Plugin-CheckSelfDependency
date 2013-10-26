@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - set minimum version prereq for Module::Metadata
 
 0.004     2013-10-24 04:17:27Z (Karen Etheridge)
           - fixes for Dist::Zilla 5.x, where we need to set the binmode on the
