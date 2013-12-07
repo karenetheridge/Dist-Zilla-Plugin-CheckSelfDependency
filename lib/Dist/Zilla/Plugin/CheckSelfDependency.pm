@@ -19,12 +19,19 @@ sub after_build
         map { values %$_ }
         grep { defined }
         @{ $self->zilla->prereqs->as_string_hash }{qw(configure build runtime test)};
+    my %develop_prereqs = map { $_ => 1 }
+        map { keys %$_ }
+        map { values %$_ }
+        grep { defined }
+        $self->zilla->prereqs->as_string_hash->{develop};
 
-    my $files = $self->zilla->find_files(':InstallModules');
+    my $provides = $self->zilla->distmeta->{provides};  # copy, to avoid autovivifying
 
     my @errors;
-    foreach my $file (@$files)
+    foreach my $file (@{$self->zilla->files})
     {
+        next if $file->name !~ /\.pm$/;
+
         $self->log_fatal(sprintf('Could not decode %s: %s', $file->name, $file->added_by))
             if $file->encoding eq 'bytes';
 
@@ -34,9 +41,13 @@ sub after_build
         my @packages = Module::Metadata->new_from_handle($fh, $file->name)->packages_inside;
         foreach my $package (@packages)
         {
-            push @errors, $package . ' is listed as a prereq, but is also provided by this dist ('
+            if (exists $prereqs{$package}
+                or (exists $develop_prereqs{$package}
+                    and not exists $provides->{$package}))
+            {
+                push @errors, $package . ' is listed as a prereq, but is also provided by this dist ('
                     . $file->name . ')!'
-                if exists $prereqs{$package};
+            }
         }
     }
 
@@ -58,9 +69,17 @@ In your F<dist.ini>:
 
 =head1 DESCRIPTION
 
+=for stopwords indexable
+
 This is a L<Dist::Zilla> plugin that runs in the I<after build> phase, which
 checks all of your module prerequisites (all phases, all types except develop) to confirm
-that none of them refer to modules that are provided by this distribution.
+that none of them refer to modules that are B<provided> by this distribution
+(that is, the metadata declares the module is indexable).
+
+In addition, all modules B<in> the distribution are checked against all module
+prerequisites (all phases, all types B<including> develop). Thus, it is
+possible to ship a L<Dist::Zilla> plugin and use (depend on) yourself, but
+errors such as declaring a dependency on C<inc::HelperPlugin> are still caught.
 
 While some prereq providers (e.g. L<C<[AutoPrereqs]>|Dist::Zilla::Plugin::AutoPrereqs>)
 do not inject dependencies found internally, there are many plugins that

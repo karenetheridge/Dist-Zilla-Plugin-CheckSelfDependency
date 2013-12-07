@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - now also checking for develop prereqs, that aren't listed in
+            'provides' metadata
 
 0.005     2013-10-26 01:31:06Z (Karen Etheridge)
           - set minimum version prereq for Module::Metadata
