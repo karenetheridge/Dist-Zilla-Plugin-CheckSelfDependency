@@ -5,6 +5,7 @@ package Dist::Zilla::Plugin::CheckSelfDependency;
 # vim: set ts=8 sw=4 tw=78 et :
 
 use Moose;
+use Dist::Zilla 5;
 with 'Dist::Zilla::Role::AfterBuild';
 use Module::Metadata 1.000005;
 use namespace::autoclean;
@@ -24,17 +25,11 @@ sub after_build
     my @errors;
     foreach my $file (@$files)
     {
-        # Dist::Zilla pre-5.0 gives us the file content from disk as :raw,
-        # otherwise we get it in its decoded form (characters)
-        my $binmode = Dist::Zilla->VERSION < 5
-            ? ''
-            : $file->encoding eq 'bytes' ? ':raw' : sprintf ':encoding(%s)', $file->encoding;
+        $self->log_fatal(sprintf('Could not decode %s: %s', $file->name, $file->added_by))
+            if $file->encoding eq 'bytes';
 
-        my $content = Dist::Zilla->VERSION < 5
-            ? $file->content
-            : $file->encoded_content;
-
-        open my $fh, '<'.$binmode, \$content or $self->log_fatal("cannot open scalar fh: $!");
+        open my $fh, sprintf('<:encoding(%s)', $file->encoding), \$file->encoded_content
+            or $self->log_fatal("cannot open scalar fh: $!");
 
         my @packages = Module::Metadata->new_from_handle($fh, $file->name)->packages_inside;
         foreach my $package (@packages)
