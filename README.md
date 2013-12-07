@@ -4,7 +4,7 @@ Dist::Zilla::Plugin::CheckSelfDependency - Check if your distribution declares a
 
 # VERSION
 
-version 0.005
+version 0.006
 
 # SYNOPSIS
 
@@ -14,18 +14,24 @@ In your `dist.ini`:
 
 # DESCRIPTION
 
-This is a [Dist::Zilla](http://search.cpan.org/perldoc?Dist::Zilla) plugin that runs in the _after build_ phase, which
+This is a [Dist::Zilla](https://metacpan.org/pod/Dist::Zilla) plugin that runs in the _after build_ phase, which
 checks all of your module prerequisites (all phases, all types except develop) to confirm
-that none of them refer to modules that are provided by this distribution.
+that none of them refer to modules that are __provided__ by this distribution
+(that is, the metadata declares the module is indexable).
 
-While some prereq providers (e.g. [`[AutoPrereqs]`](http://search.cpan.org/perldoc?Dist::Zilla::Plugin::AutoPrereqs))
+In addition, all modules __in__ the distribution are checked against all module
+prerequisites (all phases, all types __including__ develop). Thus, it is
+possible to ship a [Dist::Zilla](https://metacpan.org/pod/Dist::Zilla) plugin and use (depend on) yourself, but
+errors such as declaring a dependency on `inc::HelperPlugin` are still caught.
+
+While some prereq providers (e.g. [`[AutoPrereqs]`](https://metacpan.org/pod/Dist::Zilla::Plugin::AutoPrereqs))
 do not inject dependencies found internally, there are many plugins that
 generate code and also inject the prerequisites needed by that code, without
 regard to whether some of those modules might be provided by your dist.
 
 If such modules are found, the build fails.  To remedy the situation, remove
 the plugin that adds the prerequisite, or remove the prerequisite itself with
-[`[RemovePrereqs]`](http://search.cpan.org/perldoc?Dist::Zilla::Plugin::RemovePrereqs). (Remember that
+[`[RemovePrereqs]`](https://metacpan.org/pod/Dist::Zilla::Plugin::RemovePrereqs). (Remember that
 plugin order is significant -- you need to remove the prereq after it has been
 added.)
 
