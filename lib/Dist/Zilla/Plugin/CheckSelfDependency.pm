@@ -6,7 +6,11 @@ package Dist::Zilla::Plugin::CheckSelfDependency;
 
 use Moose;
 use Dist::Zilla 5;
-with 'Dist::Zilla::Role::AfterBuild';
+with 'Dist::Zilla::Role::AfterBuild',
+    'Dist::Zilla::Role::FileFinderUser' => {
+        default_finders => [ ':InstallModules' ],
+    },
+;
 use Module::Metadata 1.000005;
 use namespace::autoclean;
 
@@ -28,10 +32,10 @@ sub after_build
     my $provides = $self->zilla->distmeta->{provides};  # copy, to avoid autovivifying
 
     my @errors;
-    foreach my $file (@{$self->zilla->files})
+    # when 'provides' data is mandatory, we will rely on what it says -
+    # but for now, we will check our modules explicitly for provided packages.
+    foreach my $file (@{$self->found_files})
     {
-        next if $file->name !~ /\.pm$/;
-
         $self->log_fatal(sprintf('Could not decode %s: %s', $file->name, $file->added_by))
             if $file->encoding eq 'bytes';
 
@@ -91,6 +95,26 @@ the plugin that adds the prerequisite, or remove the prerequisite itself with
 L<C<[RemovePrereqs]>|Dist::Zilla::Plugin::RemovePrereqs>. (Remember that
 plugin order is significant -- you need to remove the prereq after it has been
 added.)
+
+This plugin accepts the following options:
+
+=over 4
+
+=item * C<finder>
+
+=for stopwords FileFinder
+
+This is the name of a L<FileFinder|Dist::Zilla::Role::FileFinder> for finding
+modules to check.  The default value is C<:InstallModules>; this option can be
+used more than once.
+
+Other predefined finders are listed in
+L<Dist::Zilla::Role::FileFinderUser/default_finders>.
+You can define your own with the
+L<[FileFinder::ByName]|Dist::Zilla::Plugin::FileFinder::ByName> and
+L<[FileFinder::Filter]|Dist::Zilla::Plugin::FileFinder::Filter> plugins.
+
+=back
 
 =head1 SUPPORT
 
