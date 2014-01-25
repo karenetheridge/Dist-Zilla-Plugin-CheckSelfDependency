@@ -1,3 +1,6 @@
+/.ackrc
 /.build/
-!.gitignore
-/Dist-Zilla-Plugin-CheckSelfDependency-*
+!/.gitignore
+/.latest
+/Dist-Zilla-Plugin-CheckSelfDependency-*/
+/Dist-Zilla-Plugin-CheckSelfDependency-*.tar.gz
