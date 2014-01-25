@@ -4,7 +4,7 @@ Dist::Zilla::Plugin::CheckSelfDependency - Check if your distribution declares a
 
 # VERSION
 
-version 0.006
+version 0.007
 
 # SYNOPSIS
 
@@ -34,6 +34,20 @@ the plugin that adds the prerequisite, or remove the prerequisite itself with
 [`[RemovePrereqs]`](https://metacpan.org/pod/Dist::Zilla::Plugin::RemovePrereqs). (Remember that
 plugin order is significant -- you need to remove the prereq after it has been
 added.)
+
+This plugin accepts the following options:
+
+- `finder`
+
+    This is the name of a [FileFinder](https://metacpan.org/pod/Dist::Zilla::Role::FileFinder) for finding
+    modules to check.  The default value is `:InstallModules`; this option can be
+    used more than once.
+
+    Other predefined finders are listed in
+    ["default\_finders" in Dist::Zilla::Role::FileFinderUser](https://metacpan.org/pod/Dist::Zilla::Role::FileFinderUser#default_finders).
+    You can define your own with the
+    [\[FileFinder::ByName\]](https://metacpan.org/pod/Dist::Zilla::Plugin::FileFinder::ByName) and
+    [\[FileFinder::Filter\]](https://metacpan.org/pod/Dist::Zilla::Plugin::FileFinder::Filter) plugins.
 
 # SUPPORT
 
