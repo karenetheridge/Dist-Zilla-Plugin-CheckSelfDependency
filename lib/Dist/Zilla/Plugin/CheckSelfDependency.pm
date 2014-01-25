@@ -14,6 +14,20 @@ with 'Dist::Zilla::Role::AfterBuild',
 use Module::Metadata 1.000005;
 use namespace::autoclean;
 
+around dump_config => sub
+{
+    my $orig = shift;
+    my $self = shift;
+
+    my $config = $self->$orig;
+
+    $config->{'' . __PACKAGE__} = {
+        finder => $self->finder,
+    };
+
+    return $config;
+};
+
 sub after_build
 {
     my $self = shift;
