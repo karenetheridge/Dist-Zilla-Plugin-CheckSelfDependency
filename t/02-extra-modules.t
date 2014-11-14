@@ -12,7 +12,7 @@ use Path::Tiny;
         { dist_root => 't/does_not_exist' },
         {
             add_files => {
-                'source/dist.ini' => simple_ini(
+                path(qw(source dist.ini)) => simple_ini(
                     'GatherDir',
                     'CheckSelfDependency',
                     [ 'Prereqs / RuntimeRequires' => { 'Foo::Bar' => '1.23' } ],
@@ -38,7 +38,7 @@ use Path::Tiny;
         { dist_root => 't/does_not_exist' },
         {
             add_files => {
-                'source/dist.ini' => simple_ini(
+                path(qw(source dist.ini)) => simple_ini(
                     'GatherDir',
                     'CheckSelfDependency',
                     [ 'Prereqs / RuntimeRequires' => { 'Foo::Bar::Baz' => '1.23' } ],
