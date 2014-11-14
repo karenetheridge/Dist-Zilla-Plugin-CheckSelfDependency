@@ -36,11 +36,15 @@ use Path::Tiny;
         },
     );
 
+    $tzil->chrome->logger->set_debug(1);
     like(
         exception { $tzil->build },
         qr{Foo::Bar is listed as a prereq, but is also provided by this dist \(lib/Foo/Bar.pm\)!},
         'build is aborted - develop prereq not listed in "provides"',
     );
+
+    diag 'got log messages: ', explain $tzil->log_messages
+        if not Test::Builder->new->is_passing;
 }
 
 {
@@ -59,11 +63,15 @@ use Path::Tiny;
         },
     );
 
+    $tzil->chrome->logger->set_debug(1);
     is(
         exception { $tzil->build },
         undef,
         'build is not aborted - develop prereq listed in "provides"',
     );
+
+    diag 'got log messages: ', explain $tzil->log_messages
+        if not Test::Builder->new->is_passing;
 }
 
 done_testing;

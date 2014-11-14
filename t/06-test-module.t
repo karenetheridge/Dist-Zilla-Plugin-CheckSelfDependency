@@ -22,11 +22,14 @@ my $tzil = Builder->from_config(
     },
 );
 
+$tzil->chrome->logger->set_debug(1);
 is(
     exception { $tzil->build },
     undef,
     'build is is not aborted',
 );
 
-done_testing;
+diag 'got log messages: ', explain $tzil->log_messages
+    if not Test::Builder->new->is_passing;
 
+done_testing;
