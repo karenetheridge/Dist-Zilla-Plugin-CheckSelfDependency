@@ -110,11 +110,9 @@ L<C<[RemovePrereqs]>|Dist::Zilla::Plugin::RemovePrereqs>. (Remember that
 plugin order is significant -- you need to remove the prereq after it has been
 added.)
 
-This plugin accepts the following options:
+=head1 CONFIGURATION OPTIONS
 
-=over 4
-
-=item * C<finder>
+=head2 C<finder>
 
 =for stopwords FileFinder
 
@@ -127,8 +125,6 @@ L<Dist::Zilla::Role::FileFinderUser/default_finders>.
 You can define your own with the
 L<[FileFinder::ByName]|Dist::Zilla::Plugin::FileFinder::ByName> and
 L<[FileFinder::Filter]|Dist::Zilla::Plugin::FileFinder::Filter> plugins.
-
-=back
 
 =head1 SUPPORT
 
