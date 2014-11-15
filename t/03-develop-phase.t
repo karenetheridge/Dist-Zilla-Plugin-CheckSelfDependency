@@ -43,6 +43,8 @@ use Path::Tiny;
         'build is aborted - develop prereq not listed in "provides"',
     );
 
+    ok(!exists $tzil->distmeta->{provides}, 'provides field was not autovivified in distmeta');
+
     diag 'got log messages: ', explain $tzil->log_messages
         if not Test::Builder->new->is_passing;
 }

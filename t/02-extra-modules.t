@@ -29,6 +29,8 @@ use Path::Tiny;
         'build is not aborted - prereq not actually provided by dist',
     );
 
+    ok(!exists $tzil->distmeta->{provides}, 'provides field was not autovivified in distmeta');
+
     diag 'got log messages: ', explain $tzil->log_messages
         if not Test::Builder->new->is_passing;
 }
@@ -54,6 +56,8 @@ use Path::Tiny;
         qr{Foo::Bar::Baz is listed as a prereq, but is also provided by this dist \(lib/Foo/Bar.pm\)!},
         'build is aborted',
     );
+
+    ok(!exists $tzil->distmeta->{provides}, 'provides field was not autovivified in distmeta');
 
     diag 'got log messages: ', explain $tzil->log_messages
         if not Test::Builder->new->is_passing;
