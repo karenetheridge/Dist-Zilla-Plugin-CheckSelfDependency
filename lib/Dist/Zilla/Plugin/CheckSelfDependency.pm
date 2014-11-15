@@ -2,6 +2,7 @@ use strict;
 use warnings;
 package Dist::Zilla::Plugin::CheckSelfDependency;
 # ABSTRACT: Check if your distribution declares a dependency on itself
+# KEYWORDS: plugin validate distribution prerequisites dependencies modules
 # vim: set ts=8 sw=4 tw=78 et :
 
 use Moose;
