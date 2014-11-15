@@ -12,6 +12,7 @@ with 'Dist::Zilla::Role::AfterBuild',
     },
 ;
 use Module::Metadata 1.000005;
+use CPAN::Meta::Requirements;
 use namespace::autoclean;
 
 around dump_config => sub
@@ -35,11 +36,10 @@ sub after_build
         map { values %$_ }
         grep { defined }
         @{ $self->zilla->prereqs->as_string_hash }{qw(configure build runtime test)};
-    my %develop_prereqs = map { $_ => 1 }
-        map { keys %$_ }
-        map { values %$_ }
-        grep { defined }
-        $self->zilla->prereqs->as_string_hash->{develop};
+
+    my $develop_prereqs = $self->zilla->prereqs->cpan_meta_prereqs
+        ->merged_requirements(['develop'], [qw(requires recommends suggests)]);
+    my $develop_prereqs_hash = $develop_prereqs->as_string_hash;
 
     my $provides = $self->zilla->distmeta->{provides};  # copy, to avoid autovivifying
 
@@ -61,14 +61,25 @@ sub after_build
         foreach my $package (@packages)
         {
             if (exists $prereqs{$package}
-                or (exists $develop_prereqs{$package}
+                or (exists $develop_prereqs_hash->{$package}
                     # you can only have a develop prereq on yourself if you
                     # use 'provides' metadata - so we're darned sure we
                     # matched up the right module names
                     and not exists $provides->{$package}))
             {
                 push @errors, $package . ' is listed as a prereq, but is also provided by this dist ('
-                    . $file->name . ')!'
+                    . $file->name . ')!';
+                next;
+            }
+
+            next if not exists $develop_prereqs_hash->{$package};
+
+            my $version = $provides ? $provides->{$package}{version} : $self->zilla->version;
+            if (not $develop_prereqs->accepts_module($package => $version))
+            {
+                push @errors, "$package $develop_prereqs_hash->{$package} is listed as a develop prereq, "
+                    . 'but this dist doesn\'t provide that version ('
+                    . $file->name . ' only has ' . $version . ')!';
             }
         }
     }
