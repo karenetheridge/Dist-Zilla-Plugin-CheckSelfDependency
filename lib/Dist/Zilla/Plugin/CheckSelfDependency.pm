@@ -62,6 +62,9 @@ sub after_build
         {
             if (exists $prereqs{$package}
                 or (exists $develop_prereqs{$package}
+                    # you can only have a develop prereq on yourself if you
+                    # use 'provides' metadata - so we're darned sure we
+                    # matched up the right module names
                     and not exists $provides->{$package}))
             {
                 push @errors, $package . ' is listed as a prereq, but is also provided by this dist ('
