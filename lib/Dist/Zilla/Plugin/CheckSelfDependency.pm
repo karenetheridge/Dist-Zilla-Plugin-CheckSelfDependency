@@ -103,6 +103,7 @@ While some prereq providers (e.g. L<C<[AutoPrereqs]>|Dist::Zilla::Plugin::AutoPr
 do not inject dependencies found internally, there are many plugins that
 generate code and also inject the prerequisites needed by that code, without
 regard to whether some of those modules might be provided by your dist.
+This problem is particularly acute when packaging low-level toolchain distributions.
 
 If such modules are found, the build fails.  To remedy the situation, remove
 the plugin that adds the prerequisite, or remove the prerequisite itself with
