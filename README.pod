@@ -1,0 +1,82 @@
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+Dist::Zilla::Plugin::CheckSelfDependency - Check if your distribution declares a dependency on itself
+
+=head1 VERSION
+
+version 0.008
+
+=head1 SYNOPSIS
+
+In your F<dist.ini>:
+
+    [CheckSelfDependency]
+
+=head1 DESCRIPTION
+
+=for Pod::Coverage after_build
+
+=for stopwords indexable
+
+This is a L<Dist::Zilla> plugin that runs in the I<after build> phase, which
+checks all of your module prerequisites (all phases, all types except develop) to confirm
+that none of them refer to modules that are B<provided> by this distribution
+(that is, the metadata declares the module is indexable).
+
+In addition, all modules B<in> the distribution are checked against all module
+prerequisites (all phases, all types B<including> develop). Thus, it is
+possible to ship a L<Dist::Zilla> plugin and use (depend on) yourself, but
+errors such as declaring a dependency on C<inc::HelperPlugin> are still caught.
+
+While some prereq providers (e.g. L<C<[AutoPrereqs]>|Dist::Zilla::Plugin::AutoPrereqs>)
+do not inject dependencies found internally, there are many plugins that
+generate code and also inject the prerequisites needed by that code, without
+regard to whether some of those modules might be provided by your dist.
+This problem is particularly acute when packaging low-level toolchain distributions.
+
+If such modules are found, the build fails.  To remedy the situation, remove
+the plugin that adds the prerequisite, or remove the prerequisite itself with
+L<C<[RemovePrereqs]>|Dist::Zilla::Plugin::RemovePrereqs>. (Remember that
+plugin order is significant -- you need to remove the prereq after it has been
+added.)
+
+=head1 CONFIGURATION OPTIONS
+
+=head2 C<finder>
+
+=for stopwords FileFinder
+
+This is the name of a L<FileFinder|Dist::Zilla::Role::FileFinder> for finding
+modules to check.  The default value is C<:InstallModules>; this option can be
+used more than once.
+
+Other predefined finders are listed in
+L<Dist::Zilla::Role::FileFinderUser/default_finders>.
+You can define your own with the
+L<[FileFinder::ByName]|Dist::Zilla::Plugin::FileFinder::ByName> and
+L<[FileFinder::Filter]|Dist::Zilla::Plugin::FileFinder::Filter> plugins.
+
+=head1 SUPPORT
+
+=for stopwords irc
+
+Bugs may be submitted through L<the RT bug tracker|https://rt.cpan.org/Public/Dist/Display.html?Name=Dist-Zilla-Plugin-CheckSelfDependency>
+(or L<bug-Dist-Zilla-Plugin-CheckSelfDependency@rt.cpan.org|mailto:bug-Dist-Zilla-Plugin-CheckSelfDependency@rt.cpan.org>).
+I am also usually active on irc, as 'ether' at C<irc.perl.org>.
+
+=head1 AUTHOR
+
+Karen Etheridge <ether@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2013 by Karen Etheridge.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut

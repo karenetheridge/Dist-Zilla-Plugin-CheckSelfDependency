@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.008     2014-11-15 08:34:49Z
           - drop prereq requirement on Dist::Zilla 5.x
           - check against the version being required, not just the module,
             when this is relevant (for develop prereqs)
