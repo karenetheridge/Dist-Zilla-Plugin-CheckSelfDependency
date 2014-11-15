@@ -5,7 +5,6 @@ package Dist::Zilla::Plugin::CheckSelfDependency;
 # vim: set ts=8 sw=4 tw=78 et :
 
 use Moose;
-use Dist::Zilla 5;
 with 'Dist::Zilla::Role::AfterBuild',
     'Dist::Zilla::Role::FileFinderUser' => {
         default_finders => [ ':InstallModules' ],
@@ -49,10 +48,13 @@ sub after_build
     foreach my $file (@{$self->found_files})
     {
         $self->log_fatal(sprintf('Could not decode %s: %s', $file->name, $file->added_by))
-            if $file->encoding eq 'bytes';
+            if $file->can('encoding') and $file->encoding eq 'bytes';
 
-        open my $fh, sprintf('<:encoding(%s)', $file->encoding), \$file->encoded_content
-            or $self->log_fatal("cannot open scalar fh: $!");
+        my $fh;
+        ($file->can('encoding')
+            ? open $fh, sprintf('<:encoding(%s)', $file->encoding), \$file->encoded_content
+            : open $fh, '<', \$file->content)
+                or $self->log_fatal('cannot open handle to ' . $file->name . ' content: ' . $!);
 
         my @packages = Module::Metadata->new_from_handle($fh, $file->name)->packages_inside;
         foreach my $package (@packages)

@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - drop prereq requirement on Dist::Zilla 5.x
 
 0.007     2014-01-25 03:20:52Z
           - now using a filefinder to find all modules to check -- now only
