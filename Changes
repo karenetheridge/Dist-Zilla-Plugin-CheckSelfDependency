@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.009     2014-12-03 02:07:51Z
           - increase minimum required version of CPAN::Meta::Prereqs (broken
             in 0.008)
 
