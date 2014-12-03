@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - increase minimum required version of CPAN::Meta::Prereqs (broken
+            in 0.008)
 
 0.008     2014-11-15 08:34:49Z
           - drop prereq requirement on Dist::Zilla 5.x
