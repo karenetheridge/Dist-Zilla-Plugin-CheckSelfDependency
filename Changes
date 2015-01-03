@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+          - bump Module::Metdata prereq for $VERSION parsing (RT#101095)
 
 0.009     2014-12-03 02:07:51Z
           - increase minimum required version of CPAN::Meta::Prereqs (broken

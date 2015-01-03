@@ -11,7 +11,7 @@ with 'Dist::Zilla::Role::AfterBuild',
         default_finders => [ ':InstallModules' ],
     },
 ;
-use Module::Metadata 1.000005;
+use Module::Metadata 1.000023;
 use CPAN::Meta::Prereqs 2.132830;   # for merged_requirements
 use CPAN::Meta::Requirements;
 use namespace::autoclean;
