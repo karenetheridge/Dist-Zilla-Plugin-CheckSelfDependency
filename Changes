@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.010     2015-01-03 20:48:28Z
           - bump Module::Metdata prereq for $VERSION parsing (RT#101095)
 
 0.009     2014-12-03 02:07:51Z
