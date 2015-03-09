@@ -49,14 +49,14 @@ sub after_build
     # but for now, we will check our modules explicitly for provided packages.
     foreach my $file (@{$self->found_files})
     {
-        $self->log_fatal(sprintf('Could not decode %s: %s', $file->name, $file->added_by))
+        $self->log_fatal([ 'Could not decode %s: %s', $file->name, $file->added_by ])
             if $file->can('encoding') and $file->encoding eq 'bytes';
 
         my $fh;
         ($file->can('encoding')
             ? open $fh, sprintf('<:encoding(%s)', $file->encoding), \$file->encoded_content
             : open $fh, '<', \$file->content)
-                or $self->log_fatal('cannot open handle to ' . $file->name . ' content: ' . $!);
+                or $self->log_fatal([ 'cannot open handle to %s content: %s', $file->name, $! ]);
 
         my @packages = Module::Metadata->new_from_handle($fh, $file->name)->packages_inside;
         foreach my $package (@packages)
