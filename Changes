@@ -1,4 +1,6 @@
-Revision history for Dist-Zilla-Plugin-CheckSelfDependency
+Revision history for {{$dist->name}}
+
+{{$NEXT}}
 
 0.011     2015-03-29 23:28:45Z
           - now using Dist::Zilla::Role::ModuleMetadata to use a cached object
