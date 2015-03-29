@@ -10,8 +10,8 @@ with 'Dist::Zilla::Role::AfterBuild',
     'Dist::Zilla::Role::FileFinderUser' => {
         default_finders => [ ':InstallModules' ],
     },
+    'Dist::Zilla::Role::ModuleMetadata',
 ;
-use Module::Metadata 1.000023;
 use CPAN::Meta::Prereqs 2.132830;   # for merged_requirements
 use CPAN::Meta::Requirements;
 use namespace::autoclean;
@@ -52,13 +52,7 @@ sub after_build
         $self->log_fatal([ 'Could not decode %s: %s', $file->name, $file->added_by ])
             if $file->can('encoding') and $file->encoding eq 'bytes';
 
-        my $fh;
-        ($file->can('encoding')
-            ? open $fh, sprintf('<:encoding(%s)', $file->encoding), \$file->encoded_content
-            : open $fh, '<', \$file->content)
-                or $self->log_fatal([ 'cannot open handle to %s content: %s', $file->name, $! ]);
-
-        my @packages = Module::Metadata->new_from_handle($fh, $file->name)->packages_inside;
+        my @packages = $self->module_metadata_for_file($file)->packages_inside;
         foreach my $package (@packages)
         {
             if (exists $prereqs{$package}

@@ -37,11 +37,11 @@ cmp_deeply(
             plugins => supersetof(
                 {
                     class => 'Dist::Zilla::Plugin::CheckSelfDependency',
-                    config => {
+                    config => superhashof({
                         'Dist::Zilla::Plugin::CheckSelfDependency' => {
                             finder => [ ':InstallModules' ],
                         },
-                    },
+                    }),
                     name => 'CheckSelfDependency',
                     version => ignore,
                 },
