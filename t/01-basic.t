@@ -43,7 +43,7 @@ cmp_deeply(
                         },
                     }),
                     name => 'CheckSelfDependency',
-                    version => ignore,
+                    version => Dist::Zilla::Plugin::CheckSelfDependency->VERSION,
                 },
             ),
         }),
