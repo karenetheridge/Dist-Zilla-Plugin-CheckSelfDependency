@@ -137,6 +137,10 @@ You can define your own with the
 L<[FileFinder::ByName]|Dist::Zilla::Plugin::FileFinder::ByName> and
 L<[FileFinder::Filter]|Dist::Zilla::Plugin::FileFinder::Filter> plugins.
 
+=head1 SEE ALSO
+
+L<[RemovePrereqs::Provided]|Dist::Zilla::Plugin::RemovePrereqs::Provided>
+
 =head1 SUPPORT
 
 =for stopwords irc
