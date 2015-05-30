@@ -141,7 +141,8 @@ L<[FileFinder::Filter]|Dist::Zilla::Plugin::FileFinder::Filter> plugins.
 
 =head1 SEE ALSO
 
-L<[RemovePrereqs::Provided]|Dist::Zilla::Plugin::RemovePrereqs::Provided>
+=for :list
+* L<[RemovePrereqs::Provided]|Dist::Zilla::Plugin::RemovePrereqs::Provided>
 
 =head1 SUPPORT
 
