@@ -4,7 +4,9 @@ package Dist::Zilla::Plugin::CheckSelfDependency;
 # ABSTRACT: Check if your distribution declares a dependency on itself
 # KEYWORDS: plugin validate distribution prerequisites dependencies modules
 # vim: set ts=8 sts=4 sw=4 tw=78 et :
+
 our $VERSION = '0.012';
+
 use Moose;
 with 'Dist::Zilla::Role::AfterBuild',
     'Dist::Zilla::Role::FileFinderUser' => {
