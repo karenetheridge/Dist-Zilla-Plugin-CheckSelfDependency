@@ -65,7 +65,7 @@ sub after_build
                     # matched up the right module names
                     and not exists $provides->{$package}))
             {
-                push @errors, $package . ' is listed as a prereq, but is also provided by this dist ('
+                push @errors, $package . ' is listed as a prereq, but is also provided by this distribution ('
                     . $file->name . ')!';
                 next;
             }
@@ -76,7 +76,7 @@ sub after_build
             if (not $develop_prereqs->accepts_module($package => $version))
             {
                 push @errors, "$package $develop_prereqs_hash->{$package} is listed as a develop prereq, "
-                    . 'but this dist doesn\'t provide that version ('
+                    . 'but this distribution doesn\'t provide that version ('
                     . $file->name . ' only has ' . $version . ')!';
             }
         }
@@ -115,7 +115,7 @@ errors such as declaring a dependency on C<inc::HelperPlugin> are still caught.
 While some prereq providers (e.g. L<C<[AutoPrereqs]>|Dist::Zilla::Plugin::AutoPrereqs>)
 do not inject dependencies found internally, there are many plugins that
 generate code and also inject the prerequisites needed by that code, without
-regard to whether some of those modules might be provided by your dist.
+regard to whether some of those modules might be provided by your distribution.
 This problem is particularly acute when packaging low-level toolchain distributions.
 
 If such modules are found, the build fails.  To remedy the situation, remove

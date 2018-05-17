@@ -39,7 +39,7 @@ use Path::Tiny;
     $tzil->chrome->logger->set_debug(1);
     like(
         exception { $tzil->build },
-        qr{Foo::Bar is listed as a prereq, but is also provided by this dist \(lib/Foo/Bar.pm\)!},
+        qr{Foo::Bar is listed as a prereq, but is also provided by this distribution \(lib/Foo/Bar.pm\)!},
         'build is aborted - develop prereq not listed in "provides"',
     );
 
@@ -122,7 +122,7 @@ use Path::Tiny;
     $tzil->chrome->logger->set_debug(1);
     like(
         exception { $tzil->build },
-        qr{Foo::Bar 4.01 is listed as a develop prereq, but this dist doesn't provide that version \(lib/Foo/Bar.pm only has 4\.00\)!},
+        qr{Foo::Bar 4.01 is listed as a develop prereq, but this distribution doesn't provide that version \(lib/Foo/Bar.pm only has 4\.00\)!},
         'build is aborted - develop prereq listed in "provides" does not satisfy the prereq',
     );
 

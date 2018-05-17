@@ -26,7 +26,7 @@ use Path::Tiny;
     is(
         exception { $tzil->build },
         undef,
-        'build is not aborted - prereq not actually provided by dist',
+        'build is not aborted - prereq not actually provided by distribution',
     );
 
     ok(!exists $tzil->distmeta->{provides}, 'provides field was not autovivified in distmeta');
@@ -53,7 +53,7 @@ use Path::Tiny;
     $tzil->chrome->logger->set_debug(1);
     like(
         exception { $tzil->build },
-        qr{Foo::Bar::Baz is listed as a prereq, but is also provided by this dist \(lib/Foo/Bar.pm\)!},
+        qr{Foo::Bar::Baz is listed as a prereq, but is also provided by this distribution \(lib/Foo/Bar.pm\)!},
         'build is aborted',
     );
 

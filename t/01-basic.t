@@ -26,7 +26,7 @@ my $tzil = Builder->from_config(
 $tzil->chrome->logger->set_debug(1);
 like(
     exception { $tzil->build },
-    qr{Foo::Bar is listed as a prereq, but is also provided by this dist \(lib/Foo/Bar.pm\)!},
+    qr{Foo::Bar is listed as a prereq, but is also provided by this distribution \(lib/Foo/Bar.pm\)!},
     'build is aborted',
 );
 
